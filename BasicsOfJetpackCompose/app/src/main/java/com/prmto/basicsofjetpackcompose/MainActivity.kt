@@ -13,6 +13,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.prmto.basicsofjetpackcompose.ui.theme.BasicsOfJetpackComposeTheme
@@ -39,11 +40,12 @@ fun GreetingText(name: String) {
     Text(
         text = " Hello $name!",
         modifier = Modifier
-            .height(240.dp)
+            .clickable(onClick = { })
+            .padding(all = 24.dp)
             .width(200.dp)
-            .clickable { }
-            .padding(start = 24.dp, top = 24.dp)
-            //.padding(24.dp)
+            .height(240.dp),
+        style = MaterialTheme.typography.h5,
+        fontWeight = FontWeight.SemiBold
     )
 }
 
