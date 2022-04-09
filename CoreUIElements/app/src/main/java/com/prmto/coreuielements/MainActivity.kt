@@ -3,14 +3,10 @@ package com.prmto.coreuielements
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,26 +28,48 @@ fun MainScreen() {
         color = Color.DarkGray,
         modifier = Modifier.fillMaxSize()
     ) {
-        Row {
-            HoritonzolColoredBar(Color.Yellow)
-            HoritonzolColoredBar(Color.Blue)
-            HoritonzolColoredBar(Color.Yellow)
-            HoritonzolColoredBar(Color.Blue)
-            HoritonzolColoredBar(Color.Yellow)
-            HoritonzolColoredBar(Color.Blue)
+//        Row(
+//            horizontalArrangement = Arrangement.SpaceAround,
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            HoritonzolColoredBar(Color.Yellow)
+//            HoritonzolColoredBar(Color.Blue)
+//            HoritonzolColoredBar(Color.Yellow)
+//            HoritonzolColoredBar(Color.Blue)
+//            HoritonzolColoredBar(Color.Yellow)
+//            HoritonzolColoredBar(Color.Blue)
+//        }
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceAround,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ColoredSquare(Color.Cyan)
+                ColoredSquare(Color.Magenta)
+            }
+
+            ColoredSquare(Color.Yellow)
+            ColoredSquare(Color.Blue)
+            ColoredSquare(Color.Cyan)
+            ColoredSquare(Color.Magenta)
         }
     }
 }
 
 @Composable
-fun HoritonzolColoredBar(color: Color) {
+fun ColoredSquare(color: Color) {
     Surface(
         color = color,
         modifier = Modifier
-            .height(600.dp)
-            .width(60.dp)
+            .height(100.dp)
+            .width(100.dp)
     ) {}
-    
+
 }
 
 @Preview(showBackground = true)
