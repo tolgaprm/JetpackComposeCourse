@@ -33,24 +33,25 @@ fun MainScreen() {
         modifier = Modifier.fillMaxSize()
     ) {
         Row {
-            Surface(
-                color = Color.Yellow,
-                modifier = Modifier
-                    .height(600.dp)
-                    .width(60.dp)
-            ) {
-
-            }
-            Surface(
-                color = Color.Blue,
-                modifier = Modifier
-                    .height(600.dp)
-                    .width(60.dp)
-            ) {
-
-            }
+            HoritonzolColoredBar(Color.Yellow)
+            HoritonzolColoredBar(Color.Blue)
+            HoritonzolColoredBar(Color.Yellow)
+            HoritonzolColoredBar(Color.Blue)
+            HoritonzolColoredBar(Color.Yellow)
+            HoritonzolColoredBar(Color.Blue)
         }
     }
+}
+
+@Composable
+fun HoritonzolColoredBar(color: Color) {
+    Surface(
+        color = color,
+        modifier = Modifier
+            .height(600.dp)
+            .width(60.dp)
+    ) {}
+    
 }
 
 @Preview(showBackground = true)
