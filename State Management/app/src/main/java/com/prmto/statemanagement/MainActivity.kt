@@ -11,9 +11,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,11 +26,8 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen() {
-    val greetingListState = remember { mutableStateListOf<String>("Emre", "Mustafa") }
-    var newNameStateContent = remember {
-        mutableStateOf("")
-    }
+fun MainScreen(viewModel: MainViewModel = MainViewModel()) {
+    val newNameState = viewModel.textFieldState.observeAsState("")
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -40,13 +35,9 @@ fun MainScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         GreetingList(
-            nameList = greetingListState,
-            buttonClick = {
-                greetingListState.add(newNameStateContent.value); newNameStateContent.value = ""
-            },
-            textFieldValue = newNameStateContent.value,
-            textFieldUpdate = {newName->
-                newNameStateContent.value = newName
+            textFieldValue = newNameState.value,
+            textFieldUpdate = { newName ->
+                viewModel.onTextChanged(newName)
             }
         )
     }
@@ -54,23 +45,15 @@ fun MainScreen() {
 
 @Composable
 fun GreetingList(
-    nameList: List<String>,
-    buttonClick: () -> Unit,
     textFieldValue: String,
     textFieldUpdate: (newName: String) -> Unit
 ) {
 
-    for (name in nameList) {
-        Greeting(name = name)
-    }
-
-
-
     TextField(value = textFieldValue, onValueChange = textFieldUpdate)
 
 
-    Button(onClick = buttonClick) {
-        Text("Add a new name")
+    Button(onClick = { }) {
+        Text(textFieldValue)
     }
 }
 
