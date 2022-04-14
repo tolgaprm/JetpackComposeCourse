@@ -3,10 +3,10 @@ package com.prmto.profilecardlayout
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -19,9 +19,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.request.ImageRequest
 import com.prmto.profilecardlayout.ui.theme.ProfileCardLayoutTheme
 import com.prmto.profilecardlayout.ui.theme.ligthGreen
 
@@ -47,9 +50,9 @@ fun MainScreen(userProfileList: List<UserProfile>) {
             modifier = Modifier.fillMaxSize(),
             color = Color.LightGray
         ) {
-            Column {
-                for (userProfile in userProfileList) {
-                    ProfileCard(userProfile)
+            LazyColumn {
+                items(userProfileList) { userProfile ->
+                    ProfileCard(userProfile = userProfile)
                 }
             }
 
@@ -90,14 +93,14 @@ fun ProfileCard(userProfile: UserProfile) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
-            ProfilePicture(userProfile.drawableId, userProfile.status)
+            ProfilePicture(userProfile.pictureUrl, userProfile.status)
             ProfileContent(userProfile.name, userProfile.status)
         }
     }
 }
 
 @Composable
-fun ProfilePicture(@DrawableRes drawableId: Int, onlineStatus: Boolean) {
+fun ProfilePicture(profileUrl: String, onlineStatus: Boolean) {
 
     val borderColor = if (onlineStatus) MaterialTheme.colors.ligthGreen else Color.Red
     Card(
@@ -107,13 +110,25 @@ fun ProfilePicture(@DrawableRes drawableId: Int, onlineStatus: Boolean) {
         elevation = 4.dp,
 
         ) {
-        Image(
-            painter = painterResource(id = drawableId),
+
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(profileUrl)
+                .crossfade(true)
+                .build(),
             contentDescription = null,
             modifier = Modifier
                 .size(72.dp),
             contentScale = ContentScale.Crop
         )
+
+//        Image(
+//            painter = painterResource(id = drawableId),
+//            contentDescription = null,
+//            modifier = Modifier
+//                .size(72.dp),
+//            contentScale = ContentScale.Crop
+//        )
     }
 
 }
