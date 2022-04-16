@@ -25,9 +25,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.prmto.profilecardlayout.ui.theme.ProfileCardLayoutTheme
@@ -58,7 +60,7 @@ fun UserListScreen(userProfileList: List<UserProfile>, navController: NavHostCon
             LazyColumn {
                 items(userProfileList) { userProfile ->
                     ProfileCard(userProfile = userProfile) {
-                        navController?.navigate("user_details")
+                        navController?.navigate("user_details/${userProfile.id}")
                     }
                 }
             }
@@ -68,8 +70,9 @@ fun UserListScreen(userProfileList: List<UserProfile>, navController: NavHostCon
 }
 
 @Composable
-fun ProfileDetailScreen(userProfile: UserProfile = userProfileListData[0]) {
+fun ProfileDetailScreen(userId: Int) {
 
+    val userProfile = userProfileListData.first { userProfile -> userId == userProfile.id }
     Scaffold(
         topBar = { AppBar() }
     ) {
@@ -106,8 +109,14 @@ fun UsersApplication(userProfileList: List<UserProfile> = userProfileListData) {
             UserListScreen(userProfileList = userProfileList, navController)
         }
 
-        composable("user_details") {
-            ProfileDetailScreen()
+        composable(
+            "user_details/{userId}", arguments = listOf(
+                navArgument("userId") {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            ProfileDetailScreen(it.arguments!!.getInt("userId"))
         }
     }
 }
@@ -216,12 +225,11 @@ fun ProfileContent(name: String, onlineStatus: Boolean, aligment: Alignment.Hori
 }
 
 
-
 @Preview(showBackground = true)
 @Composable
 fun UserProfileDetailScreenPreview() {
     ProfileCardLayoutTheme {
-        ProfileDetailScreen()
+        ProfileDetailScreen(userId = 0)
     }
 }
 
