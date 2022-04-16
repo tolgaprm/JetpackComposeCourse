@@ -21,9 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter
 import coil.request.ImageRequest
 import com.prmto.profilecardlayout.ui.theme.ProfileCardLayoutTheme
 import com.prmto.profilecardlayout.ui.theme.ligthGreen
@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ProfileCardLayoutTheme {
-                MainScreen(userProfileList)
+                UserListScreen(userProfileList)
             }
         }
     }
@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun MainScreen(userProfileList: List<UserProfile>) {
+fun UserListScreen(userProfileList: List<UserProfile>) {
 
     Scaffold(
         topBar = { AppBar() }
@@ -94,13 +94,13 @@ fun ProfileCard(userProfile: UserProfile) {
             horizontalArrangement = Arrangement.Start
         ) {
             ProfilePicture(userProfile.pictureUrl, userProfile.status)
-            ProfileContent(userProfile.name, userProfile.status)
+            ProfileContent(userProfile.name, userProfile.status, aligment = Alignment.Start)
         }
     }
 }
 
 @Composable
-fun ProfilePicture(profileUrl: String, onlineStatus: Boolean) {
+fun ProfilePicture(profileUrl: String, onlineStatus: Boolean, imageSize: Dp = 72.dp) {
 
     val borderColor = if (onlineStatus) MaterialTheme.colors.ligthGreen else Color.Red
     Card(
@@ -118,7 +118,7 @@ fun ProfilePicture(profileUrl: String, onlineStatus: Boolean) {
                 .build(),
             contentDescription = null,
             modifier = Modifier
-                .size(72.dp),
+                .size(imageSize),
             contentScale = ContentScale.Crop
         )
 
@@ -134,12 +134,12 @@ fun ProfilePicture(profileUrl: String, onlineStatus: Boolean) {
 }
 
 @Composable
-fun ProfileContent(name: String, onlineStatus: Boolean) {
+fun ProfileContent(name: String, onlineStatus: Boolean, aligment: Alignment.Horizontal) {
 
     Column(
         modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
+            .padding(8.dp),
+        horizontalAlignment = aligment
     ) {
 
         val alpha = if (onlineStatus) 1f else ContentAlpha.medium
@@ -162,11 +162,47 @@ fun ProfileContent(name: String, onlineStatus: Boolean) {
     }
 }
 
+@Composable
+fun ProfileDetailScreen(userProfile: UserProfile = userProfileList[0]) {
+
+    Scaffold(
+        topBar = { AppBar() }
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = Color.LightGray
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
+            ) {
+                ProfilePicture(userProfile.pictureUrl, userProfile.status, imageSize = 240.dp)
+                ProfileContent(
+                    userProfile.name,
+                    userProfile.status,
+                    aligment = Alignment.CenterHorizontally
+                )
+            }
+        }
+
+
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+fun UserProfileDetailScreenPreview() {
     ProfileCardLayoutTheme {
-        MainScreen(userProfileList)
+        ProfileDetailScreen()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun UserListPreview() {
+    ProfileCardLayoutTheme {
+        UserListScreen(userProfileList)
     }
 }
