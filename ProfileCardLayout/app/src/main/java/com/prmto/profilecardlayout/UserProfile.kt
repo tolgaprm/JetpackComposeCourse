@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 
 data class UserProfile constructor(val name: String, val status: Boolean, val pictureUrl: String)
 
-val userProfileList = arrayListOf(
+val userProfileListData = arrayListOf(
     UserProfile(
         name = "Michaela Runnings",
         status = true,
