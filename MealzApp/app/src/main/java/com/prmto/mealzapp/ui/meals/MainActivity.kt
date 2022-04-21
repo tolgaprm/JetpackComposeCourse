@@ -9,10 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.prmto.mealzapp.model.response.MealsResponse
 import com.prmto.mealzapp.ui.theme.MealzAppTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,21 +24,11 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MealsCategoriesScreen() {
-    val rememberedMeal: MutableState<List<MealsResponse>> = remember {
-        mutableStateOf(emptyList())
-    }
-    val coroutineScope = rememberCoroutineScope()
-
     val viewModel: MealsCategoriesViewModel = viewModel()
-
-    LaunchedEffect(key1 = "GET_MEALS"){
-        coroutineScope.launch(Dispatchers.IO) {
-            rememberedMeal.value = viewModel.getMeal()
-        }
-    }
+    val meals = viewModel.meals.value
 
     LazyColumn {
-        items(rememberedMeal.value) { meal ->
+        items(meals) { meal ->
             Text(text = meal.name)
         }
     }
