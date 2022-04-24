@@ -20,18 +20,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.prmto.mealzapp.model.response.MealsResponse
 import com.prmto.mealzapp.ui.theme.MealzAppTheme
 
 @Composable
-fun MealsCategoriesScreen() {
+fun MealsCategoriesScreen(navController: NavHostController?, navigationCallBack: (String) -> Unit) {
     val viewModel: MealsCategoriesViewModel = viewModel()
     val meals = viewModel.meals.value
 
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
         items(meals) { meal ->
-            MealCategory(meal = meal)
+            MealCategory(meal = meal,navigationCallBack )
         }
     }
 
@@ -39,7 +40,7 @@ fun MealsCategoriesScreen() {
 
 
 @Composable
-fun MealCategory(meal: MealsResponse) {
+fun MealCategory(meal: MealsResponse, navigationCallBack: (String) -> Unit) {
 
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -49,6 +50,7 @@ fun MealCategory(meal: MealsResponse) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 16.dp)
+            .clickable { navigationCallBack(meal.id) }
 
     ) {
 
@@ -106,6 +108,6 @@ fun MealCategory(meal: MealsResponse) {
 @Composable
 fun DefaultPreview() {
     MealzAppTheme {
-        MealCategory(meal = MealsResponse("1", "Beef", "beef", ""))
+        MealsCategoriesScreen(navController = null, navigationCallBack ={} )
     }
 }

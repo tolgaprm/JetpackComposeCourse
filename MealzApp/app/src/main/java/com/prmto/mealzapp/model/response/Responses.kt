@@ -7,7 +7,7 @@ data class MealsCategoriesResponse(
 )
 
 data class MealsResponse(
-    @SerializedName("idCategory") val id: String,
+    @SerializedName("idCategory") var id: String,
     @SerializedName("strCategory") val name: String,
     @SerializedName("strCategoryDescription") val description: String,
     @SerializedName("strCategoryThumb") val imageUrl: String
