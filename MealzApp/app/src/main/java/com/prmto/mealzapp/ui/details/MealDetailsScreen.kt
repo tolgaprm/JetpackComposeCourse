@@ -1,16 +1,21 @@
 package com.prmto.mealzapp.ui.details
 
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -23,13 +28,21 @@ import com.prmto.mealzapp.model.response.MealsResponse
 @Composable
 fun MealDetailsScreen(meal: MealsResponse?) {
 
-    var isExpanded by remember { mutableStateOf(false) }
-    val imageSizeDp: Dp by animateDpAsState(targetValue = if (isExpanded) 200.dp else 100.dp)
-
+    var profilePictureState by remember {
+        mutableStateOf(MealProfilePictureState.Normal)
+    }
+    val transition = updateTransition(targetState = profilePictureState, label = "")
+    val imageSizeDp by transition.animateDp(targetValueByState = { it.size }, label = "")
+    val color by transition.animateColor(targetValueByState = { it.color }, label = "")
+    val widthSize by transition.animateDp(targetValueByState = { it.borderWidth }, label = "")
 
     Column {
         Row {
-            Card {
+            Card(
+                modifier = Modifier.padding(16.dp),
+                shape = CircleShape,
+                border = BorderStroke(widthSize, color)
+            ) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(meal?.imageUrl)
@@ -51,10 +64,18 @@ fun MealDetailsScreen(meal: MealsResponse?) {
         Button(
             modifier = Modifier.padding(16.dp),
             onClick = {
-                isExpanded = !isExpanded
+                profilePictureState = if (profilePictureState == MealProfilePictureState.Normal)
+                    MealProfilePictureState.Expanded
+                else
+                    MealProfilePictureState.Normal
             }
         ) {
             Text("Change state of meal profile picture")
         }
     }
+}
+
+enum class MealProfilePictureState(val color: Color, val size: Dp, val borderWidth: Dp) {
+    Normal(Color.Blue, 120.dp, 8.dp),
+    Expanded(Color.Cyan, 200.dp, 24.dp)
 }
