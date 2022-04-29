@@ -3,9 +3,10 @@ package com.prmto.mealzapp.ui.details
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -23,17 +24,17 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.prmto.mealzapp.model.response.MealsResponse
-import kotlin.math.max
 import kotlin.math.min
 
 
 @Composable
 fun MealDetailsScreen(meal: MealsResponse?) {
 
-    val scrollState = rememberScrollState()
-    val offset = min(1f, 1 - (scrollState.value / 600f))
-    val size by animateDpAsState(targetValue =max(100.dp, 200.dp * offset) )
-    
+    val scrollState = rememberLazyListState()
+    val offset =
+        min(1f, 1 - (scrollState.firstVisibleItemScrollOffset / 600f + scrollState.firstVisibleItemIndex))
+    val size by animateDpAsState(targetValue = max(100.dp, 150.dp * offset))
+
     Surface(color = MaterialTheme.colors.background) {
         Column {
             Surface(elevation = 8.dp) {
@@ -62,9 +63,11 @@ fun MealDetailsScreen(meal: MealsResponse?) {
                     )
                 }
             }
-            Column(modifier = Modifier.verticalScroll(scrollState)) {
-                repeat(20) {
-                    Text(text = "This is a text element", modifier = Modifier.padding(32.dp))
+
+            val dummyContentList = (0..100).map { it.toString() }
+            LazyColumn(state = scrollState) {
+                items(dummyContentList) {
+                    Text(text = "This is $it text element ", modifier = Modifier.padding(32.dp))
                 }
             }
         }
